@@ -22,6 +22,7 @@ export type Action =
 	| { type: "addColor"; hex: HexColor }
 	| { type: "updateColor"; index: number; hex: HexColor }
 	| { type: "removeColor"; index: number }
+	| { type: "replaceColors"; colors: HexColor[] }
 	| { type: "setAnchor"; index: number | undefined }
 	| { type: "addStep"; step: BlendStep }
 	| { type: "removeStep"; index: number }
@@ -122,6 +123,17 @@ export function appReducer(state: AppState, action: Action): AppState {
 					action.index,
 					inputColors.length,
 				),
+			};
+		}
+		case "replaceColors": {
+			const chain = state.chain.map((step) =>
+				step.type === "anchor" ? { ...step, anchorIndex: 0 } : step,
+			);
+			return {
+				...state,
+				inputColors: action.colors,
+				anchorIndex: undefined,
+				chain,
 			};
 		}
 		case "setAnchor":

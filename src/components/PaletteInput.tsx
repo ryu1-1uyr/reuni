@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { HexColor } from "../core/types";
 import { normalizeHex } from "../utils/hex";
+import { generateRandomPalette } from "../utils/randomPalette";
 import { ColorInput } from "./ColorInput";
 import { ColorSwatch } from "./ColorSwatch";
 import { EyeDropperButton } from "./EyeDropperButton";
@@ -11,6 +12,7 @@ type Props = {
 	onAdd: (hex: HexColor) => void;
 	onRemove: (index: number) => void;
 	onToggleAnchor: (index: number) => void;
+	onReplaceAll: (colors: HexColor[]) => void;
 };
 
 export function PaletteInput({
@@ -19,6 +21,7 @@ export function PaletteInput({
 	onAdd,
 	onRemove,
 	onToggleAnchor,
+	onReplaceAll,
 }: Props) {
 	const [input, setInput] = useState("");
 	const [error, setError] = useState<string | null>(null);
@@ -32,6 +35,16 @@ export function PaletteInput({
 		onAdd(normalized);
 		setInput("");
 		setError(null);
+	};
+
+	const handleRandom = () => {
+		if (
+			colors.length > 0 &&
+			!window.confirm("入力パレットをランダム5色で置き換えるよ。いい？")
+		) {
+			return;
+		}
+		onReplaceAll(generateRandomPalette());
 	};
 
 	return (
@@ -77,6 +90,14 @@ export function PaletteInput({
 					追加
 				</button>
 				<EyeDropperButton onPick={onAdd} />
+				<button
+					type="button"
+					onClick={handleRandom}
+					title="それっぽい色をランダムに5個入れる"
+					className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-sm font-medium text-rose-800 hover:border-rose-300 hover:bg-rose-100"
+				>
+					🎲 ランダム
+				</button>
 				{error && <span className="text-xs text-red-600">{error}</span>}
 			</div>
 		</section>

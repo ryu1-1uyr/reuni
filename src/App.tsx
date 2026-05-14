@@ -92,6 +92,9 @@ function App() {
                 index: state.anchorIndex === index ? undefined : index,
               })
             }
+            onReplaceAll={(colors) =>
+              dispatch({ type: "replaceColors", colors })
+            }
           />
         </SectionCard>
 
