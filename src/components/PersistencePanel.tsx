@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import type { AppState } from "../state/appState";
 import type { HistoryEntry } from "../storage/localStorage";
 import { downloadJson, readJsonFile } from "../utils/file";
+import { CollapsibleSection } from "./CollapsibleSection";
 
 type Props = {
 	state: AppState;
@@ -61,14 +62,12 @@ export function PersistencePanel({
 	};
 
 	return (
-		<section className="space-y-3">
-			<h2 className="text-sm font-semibold text-neutral-700">保存と履歴</h2>
-
+		<CollapsibleSection title="保存と履歴">
 			<div className="flex flex-wrap gap-2">
 				<button
 					type="button"
 					onClick={onSaveSnapshot}
-					className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-neutral-700"
+					className="rounded-lg bg-rose-700 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-rose-600"
 				>
 					履歴に保存
 				</button>
@@ -145,6 +144,6 @@ export function PersistencePanel({
 					履歴に保存するとここに直近5件まで出るよ
 				</p>
 			)}
-		</section>
+		</CollapsibleSection>
 	);
 }
