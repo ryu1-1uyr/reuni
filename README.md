@@ -1,4 +1,4 @@
-# reuni 🌸
+# reuni
 
 離れた色同士を再結合して馴染ませる、ブラウザで動くカラーパレット調整ツール。
 
@@ -7,11 +7,11 @@
 ## 特徴
 
 - **5 つの馴染ませモード** をチェーン状に積み重ねて適用
-  - 彩度統一・明度統一・トーン統一（L＋C 同時）
+  - 彩度統一・明度統一・トーン統一（L ＋ C 同時）
   - 共通色ブレンド（ベージュ等を全色に N% 混ぜる）
   - 入力色にあわせる（基準色の L/C に他を寄せる、色相は維持）
 - **Before / After 並列表示** ＋ 入力順 / 明度順トグル
-- **おすすめチェーン** ボタン：入力色から中央値 L・C のトーン統一とベージュ 15% ブレンドを自動生成
+- **なんかいい感じにするボタン** ボタン：入力色から中央値 L・C のトーン統一とベージュ 15% ブレンドを自動生成
 - **色サジェスト**：パレットに足りない色相を提案（既存色の hue ギャップから計算）
 - **スポイト（EyeDropper API）** で画面上の任意ピクセルを取り込み（対応ブラウザのみ）
 - **カラーピッカー**：HEX 手入力欄にネイティブのカラーサークル
@@ -20,17 +20,17 @@
 
 ## 技術スタック
 
-| 層 | 採用 |
-|---|---|
-| ビルド | Vite 8 |
-| 言語 | TypeScript |
-| UI | React 19 |
-| 色計算 | [`culori`](https://culorijs.org/)（OKLCH ↔ sRGB、gamut clip） |
-| スタイル | Tailwind CSS v4（`@tailwindcss/vite`） |
-| テスト | Vitest 4（happy-dom） |
-| Lint / Format | Biome |
+| 層            | 採用                                                          |
+| ------------- | ------------------------------------------------------------- |
+| ビルド        | Vite 8                                                        |
+| 言語          | TypeScript                                                    |
+| UI            | React 19                                                      |
+| 色計算        | [`culori`](https://culorijs.org/)（OKLCH ↔ sRGB、gamut clip） |
+| スタイル      | Tailwind CSS v4（`@tailwindcss/vite`）                        |
+| テスト        | Vitest 4（happy-dom）                                         |
+| Lint / Format | Biome                                                         |
 
-色計算は **OKLCH 色空間** で行うのがミソ。人間の知覚と線形に近いから、L や C を機械的に揃えても見た目で違和感が出にくい。
+色計算は **OKLCH 色空間** で行うのがミソ。人間の知覚と線形に近いから、L や C を機械的に揃えても見た目で違和感が出にくいらしい。
 
 ## ディレクトリ構成
 
@@ -69,13 +69,7 @@ npm run format     # Biome format
 
 ## デプロイ
 
-GitHub Pages へ GitHub Actions で自動デプロイし、カスタムドメイン `reuni.ryu-reu.me` で公開している。
-
-1. リポジトリを GitHub に push
-2. **Settings → Pages → Source** を「**GitHub Actions**」に変更
-3. **Settings → Pages → Custom domain** に `reuni.ryu-reu.me` を設定
-4. DNS（Cloudflare）に CNAME レコードを追加：`reuni.ryu-reu.me → <username>.github.io`（初回は **DNS only** 推奨。Cloudflare プロキシ ON だと Let's Encrypt が発行できない）
-5. `main` ブランチに push すると `.github/workflows/deploy.yml` が走って公開される
+`main` ブランチに push すると `.github/workflows/deploy.yml` が走って公開される
 
 `public/CNAME` にカスタムドメインを記載しており、Vite が `dist/CNAME` として出力する。`vite.config.ts` の `base` はルートドメインで配信するので `'/'` 固定。サブパス配信に戻す場合は `'/<path>/'` に変更すること。
 
