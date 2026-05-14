@@ -1,122 +1,84 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useMemo, useReducer } from "react";
+import { ChainEditor } from "./components/ChainEditor";
+import { PaletteDisplay } from "./components/PaletteDisplay";
+import { PaletteInput } from "./components/PaletteInput";
+import { SortToggle } from "./components/SortToggle";
+import { applyChain } from "./core/index";
+import type { Palette } from "./core/types";
+import { INITIAL_STATE, appReducer } from "./state/appState";
 
 function App() {
-  const [count, setCount] = useState(0)
+	const [state, dispatch] = useReducer(appReducer, INITIAL_STATE);
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+	const inputPalette = useMemo<Palette>(
+		() => ({
+			id: "current",
+			name: "current",
+			colors: state.inputColors,
+			anchorIndex: state.anchorIndex,
+			createdAt: "",
+		}),
+		[state.inputColors, state.anchorIndex],
+	);
 
-      <div className="ticks"></div>
+	const outputPalette = useMemo(
+		() => applyChain(inputPalette, state.chain),
+		[inputPalette, state.chain],
+	);
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+	return (
+		<div className="min-h-screen bg-neutral-100 text-neutral-900">
+			<div className="mx-auto max-w-4xl space-y-8 px-4 py-8">
+				<header className="space-y-1">
+					<h1 className="text-2xl font-bold tracking-tight">reuni</h1>
+					<p className="text-sm text-neutral-600">
+						離れた色同士を再結合して馴染ませるツール
+					</p>
+				</header>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+				<PaletteInput
+					colors={state.inputColors}
+					anchorIndex={state.anchorIndex}
+					onAdd={(hex) => dispatch({ type: "addColor", hex })}
+					onRemove={(index) => dispatch({ type: "removeColor", index })}
+					onToggleAnchor={(index) =>
+						dispatch({
+							type: "setAnchor",
+							index: state.anchorIndex === index ? undefined : index,
+						})
+					}
+				/>
+
+				<section className="space-y-3">
+					<div className="flex items-center justify-between">
+						<h2 className="text-sm font-semibold text-neutral-700">
+							Before / After
+						</h2>
+						<SortToggle
+							value={state.sortMode}
+							onChange={(mode) => dispatch({ type: "setSortMode", mode })}
+						/>
+					</div>
+					<PaletteDisplay
+						beforeColors={inputPalette.colors}
+						afterColors={outputPalette.colors}
+						sortMode={state.sortMode}
+					/>
+				</section>
+
+				<ChainEditor
+					chain={state.chain}
+					inputColors={state.inputColors}
+					onAddStep={(step) => dispatch({ type: "addStep", step })}
+					onRemoveStep={(index) => dispatch({ type: "removeStep", index })}
+					onUpdateStep={(index, step) =>
+						dispatch({ type: "updateStep", index, step })
+					}
+					onMoveStep={(from, to) => dispatch({ type: "moveStep", from, to })}
+				/>
+			</div>
+		</div>
+	);
 }
 
-export default App
+export default App;
