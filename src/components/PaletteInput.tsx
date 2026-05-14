@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { HexColor } from "../core/types";
 import { normalizeHex } from "../utils/hex";
+import { ColorInput } from "./ColorInput";
 import { ColorSwatch } from "./ColorSwatch";
 import { EyeDropperButton } from "./EyeDropperButton";
 
@@ -58,19 +59,15 @@ export function PaletteInput({
 			)}
 
 			<div className="flex flex-wrap items-center gap-2">
-				<input
-					type="text"
+				<ColorInput
 					value={input}
-					onChange={(e) => {
-						setInput(e.target.value);
+					onChange={(next) => {
+						setInput(next);
 						if (error) setError(null);
 					}}
-					onKeyDown={(e) => {
-						if (e.key === "Enter") handleAdd();
-					}}
+					onEnter={handleAdd}
 					placeholder="#RRGGBB"
-					aria-label="HEX color input"
-					className="w-32 rounded-md border border-neutral-300 bg-white px-3 py-1.5 font-mono text-sm focus:border-neutral-500 focus:outline-none"
+					ariaLabel="HEX color input"
 				/>
 				<button
 					type="button"
