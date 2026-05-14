@@ -1,6 +1,6 @@
 import type { HexColor } from "../core/types";
 
-export type ExportFormat = "json" | "css" | "tailwind";
+export type ExportFormat = "text" | "json" | "css" | "tailwind";
 
 export const EXPORT_FORMAT_LABELS: Record<ExportFormat, string> = {
 	json: "JSON",
@@ -13,6 +13,8 @@ export function formatExport(
 	format: ExportFormat,
 ): string {
 	switch (format) {
+		case "text":
+			return colors.join("\n");
 		case "json":
 			return JSON.stringify(colors, null, 2);
 		case "css": {

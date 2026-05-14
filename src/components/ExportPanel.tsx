@@ -5,15 +5,16 @@ import {
 	type ExportFormat,
 	formatExport,
 } from "../utils/exportFormats";
+import { CollapsibleSection } from "./CollapsibleSection";
 
 type Props = {
 	colors: HexColor[];
 };
 
-const FORMATS: ExportFormat[] = ["json", "css", "tailwind"];
+const FORMATS: ExportFormat[] = ["text", "json", "css", "tailwind"];
 
 export function ExportPanel({ colors }: Props) {
-	const [format, setFormat] = useState<ExportFormat>("json");
+	const [format, setFormat] = useState<ExportFormat>("text");
 	const [copied, setCopied] = useState(false);
 	const code = formatExport(colors, format);
 
@@ -32,19 +33,19 @@ export function ExportPanel({ colors }: Props) {
 		}
 	};
 
+	const copyButton = (
+		<button
+			type="button"
+			onClick={handleCopy}
+			disabled={colors.length === 0}
+			className="rounded-md border border-neutral-300 bg-white px-3 py-1 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:opacity-40"
+		>
+			{copied ? "コピーしたよ" : "コピー"}
+		</button>
+	);
+
 	return (
-		<section className="space-y-3">
-			<div className="flex items-center justify-between">
-				<h2 className="text-sm font-semibold text-neutral-700">エクスポート</h2>
-				<button
-					type="button"
-					onClick={handleCopy}
-					disabled={colors.length === 0}
-					className="rounded-md border border-neutral-300 bg-white px-3 py-1 text-sm font-medium text-neutral-700 hover:bg-neutral-50 disabled:opacity-40"
-				>
-					{copied ? "コピーしたよ" : "コピー"}
-				</button>
-			</div>
+		<CollapsibleSection title="エクスポート" rightSlot={copyButton}>
 			<div className="inline-flex rounded-md border border-neutral-300 bg-white p-0.5 text-sm">
 				{FORMATS.map((f) => (
 					<button
@@ -65,6 +66,6 @@ export function ExportPanel({ colors }: Props) {
 			<pre className="max-h-64 overflow-auto rounded-lg border border-neutral-200 bg-neutral-900 p-3 font-mono text-xs leading-relaxed text-neutral-50">
 				{code}
 			</pre>
-		</section>
+		</CollapsibleSection>
 	);
 }
