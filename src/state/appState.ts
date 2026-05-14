@@ -27,6 +27,7 @@ export type Action =
 	| { type: "removeStep"; index: number }
 	| { type: "updateStep"; index: number; step: BlendStep }
 	| { type: "moveStep"; from: number; to: number }
+	| { type: "setChain"; chain: BlendChain }
 	| { type: "setSortMode"; mode: SortMode }
 	| { type: "loadState"; state: AppState };
 
@@ -146,6 +147,8 @@ export function appReducer(state: AppState, action: Action): AppState {
 			chain.splice(to, 0, moved);
 			return { ...state, chain };
 		}
+		case "setChain":
+			return { ...state, chain: action.chain };
 		case "setSortMode":
 			return { ...state, sortMode: action.mode };
 		case "loadState":
