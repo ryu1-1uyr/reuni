@@ -27,7 +27,8 @@ export type Action =
 	| { type: "removeStep"; index: number }
 	| { type: "updateStep"; index: number; step: BlendStep }
 	| { type: "moveStep"; from: number; to: number }
-	| { type: "setSortMode"; mode: SortMode };
+	| { type: "setSortMode"; mode: SortMode }
+	| { type: "loadState"; state: AppState };
 
 export const INITIAL_STATE: AppState = {
 	inputColors: ["#ff6b6b", "#4ecdc4", "#ffe66d", "#95e1d3", "#6c5ce7"],
@@ -147,5 +148,7 @@ export function appReducer(state: AppState, action: Action): AppState {
 		}
 		case "setSortMode":
 			return { ...state, sortMode: action.mode };
+		case "loadState":
+			return action.state;
 	}
 }

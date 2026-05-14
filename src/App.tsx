@@ -1,14 +1,32 @@
-import { useMemo, useReducer } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import { ChainEditor } from "./components/ChainEditor";
+import { ExportPanel } from "./components/ExportPanel";
 import { PaletteDisplay } from "./components/PaletteDisplay";
 import { PaletteInput } from "./components/PaletteInput";
+import { PersistencePanel } from "./components/PersistencePanel";
 import { SortToggle } from "./components/SortToggle";
 import { applyChain } from "./core/index";
 import type { Palette } from "./core/types";
-import { INITIAL_STATE, appReducer } from "./state/appState";
+import { INITIAL_STATE, type AppState, appReducer } from "./state/appState";
+import {
+	appendHistory,
+	loadCurrent,
+	loadHistory,
+	removeFromHistory,
+	saveCurrent,
+} from "./storage/localStorage";
+
+function initState(): AppState {
+	return loadCurrent() ?? INITIAL_STATE;
+}
 
 function App() {
-	const [state, dispatch] = useReducer(appReducer, INITIAL_STATE);
+	const [state, dispatch] = useReducer(appReducer, undefined, initState);
+	const [history, setHistory] = useState(() => loadHistory());
+
+	useEffect(() => {
+		saveCurrent(state);
+	}, [state]);
 
 	const inputPalette = useMemo<Palette>(
 		() => ({
@@ -26,9 +44,28 @@ function App() {
 		[inputPalette, state.chain],
 	);
 
+	const handleSaveSnapshot = () => {
+		const stamp = new Date().toLocaleString("ja-JP", {
+			month: "2-digit",
+			day: "2-digit",
+			hour: "2-digit",
+			minute: "2-digit",
+		});
+		const name = `${state.inputColors.length}色・${state.chain.length}ステップ (${stamp})`;
+		setHistory((h) => appendHistory(h, state, name));
+	};
+
+	const handleRestore = (loaded: AppState) => {
+		dispatch({ type: "loadState", state: loaded });
+	};
+
+	const handleDeleteSnapshot = (id: string) => {
+		setHistory((h) => removeFromHistory(h, id));
+	};
+
 	return (
 		<div className="min-h-screen bg-neutral-100 text-neutral-900">
-			<div className="mx-auto max-w-4xl space-y-8 px-4 py-8">
+			<div className="mx-auto max-w-4xl space-y-8 px-4 py-6 sm:py-8">
 				<header className="space-y-1">
 					<h1 className="text-2xl font-bold tracking-tight">reuni</h1>
 					<p className="text-sm text-neutral-600">
@@ -50,7 +87,7 @@ function App() {
 				/>
 
 				<section className="space-y-3">
-					<div className="flex items-center justify-between">
+					<div className="flex flex-wrap items-center justify-between gap-2">
 						<h2 className="text-sm font-semibold text-neutral-700">
 							Before / After
 						</h2>
@@ -76,6 +113,20 @@ function App() {
 					}
 					onMoveStep={(from, to) => dispatch({ type: "moveStep", from, to })}
 				/>
+
+				<ExportPanel colors={outputPalette.colors} />
+
+				<PersistencePanel
+					state={state}
+					history={history}
+					onSaveSnapshot={handleSaveSnapshot}
+					onRestore={handleRestore}
+					onDeleteSnapshot={handleDeleteSnapshot}
+				/>
+
+				<footer className="pt-4 text-center text-xs text-neutral-400">
+					reuni — palette blender
+				</footer>
 			</div>
 		</div>
 	);
