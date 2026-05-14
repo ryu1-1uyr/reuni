@@ -37,3 +37,10 @@ export function generateRandomPalette(): HexColor[] {
 		return oklchToHex({ l, c, h });
 	});
 }
+
+export function generateRandomColor(): HexColor {
+	const h = Math.random() * 360;
+	const l = randomInRange(BASE_L_MIN, BASE_L_MAX);
+	const c = randomInRange(BASE_C_MIN, BASE_C_MAX);
+	return oklchToHex({ l, c, h });
+}
