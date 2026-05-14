@@ -2,6 +2,7 @@ import { DEFAULT_BLEND_COLORS, OKLCH_C_MAX } from "../core/constants";
 import type { BlendStep, HexColor } from "../core/types";
 import { normalizeHex } from "../utils/hex";
 import { ColorInput } from "./ColorInput";
+import { ColorListDropdown } from "./ColorListDropdown";
 import { Slider } from "./Slider";
 
 type Props = {
@@ -121,30 +122,21 @@ export function StepEditor({ step, inputColors, onChange }: Props) {
     case "anchor":
       return (
         <div className="space-y-2">
-          <label className="block text-xs">
-            <span className="mb-1 block font-medium text-neutral-700">
-              基準色
-            </span>
+          <div className="space-y-1 text-xs">
+            <span className="block font-medium text-neutral-700">基準色</span>
             {inputColors.length === 0 ? (
               <span className="text-neutral-500">
                 (パレットが空 — 色を追加してね)
               </span>
             ) : (
-              <select
+              <ColorListDropdown
+                colors={inputColors}
                 value={step.anchorIndex}
-                onChange={(e) =>
-                  onChange({ ...step, anchorIndex: Number(e.target.value) })
-                }
-                className="w-full rounded-md border border-neutral-300 bg-white px-2 py-1 font-mono text-xs"
-              >
-                {inputColors.map((hex, i) => (
-                  <option key={`${hex}-${i}`} value={i}>
-                    #{i + 1}: {hex.toLowerCase()}
-                  </option>
-                ))}
-              </select>
+                onChange={(anchorIndex) => onChange({ ...step, anchorIndex })}
+                ariaLabel="基準色を選ぶ"
+              />
             )}
-          </label>
+          </div>
           <Slider
             label="寄せる強度"
             value={step.strength}
