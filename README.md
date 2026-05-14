@@ -58,7 +58,7 @@ tests/                    # core/ の単体テスト
 ```bash
 npm install        # 依存インストール
 
-npm run dev        # 開発サーバー（localhost:5173/reuni/）
+npm run dev        # 開発サーバー（localhost:5173/）
 npm test           # テスト 1 回
 npm run test:watch # ファイル監視テスト
 npm run build      # 型チェック + 本番ビルド
@@ -69,13 +69,15 @@ npm run format     # Biome format
 
 ## デプロイ
 
-GitHub Pages へ GitHub Actions で自動デプロイする。
+GitHub Pages へ GitHub Actions で自動デプロイし、カスタムドメイン `reuni.ryu-reu.me` で公開している。
 
 1. リポジトリを GitHub に push
 2. **Settings → Pages → Source** を「**GitHub Actions**」に変更
-3. `main` ブランチに push すると `.github/workflows/deploy.yml` が走って `https://<username>.github.io/reuni/` に公開される
+3. **Settings → Pages → Custom domain** に `reuni.ryu-reu.me` を設定
+4. DNS（Cloudflare）に CNAME レコードを追加：`reuni.ryu-reu.me → <username>.github.io`（初回は **DNS only** 推奨。Cloudflare プロキシ ON だと Let's Encrypt が発行できない）
+5. `main` ブランチに push すると `.github/workflows/deploy.yml` が走って公開される
 
-`vite.config.ts` の `base: '/reuni/'` はリポジトリ名と一致させる必要がある。フォーク等でリポジトリ名を変えたら忘れず合わせて。
+`public/CNAME` にカスタムドメインを記載しており、Vite が `dist/CNAME` として出力する。`vite.config.ts` の `base` はルートドメインで配信するので `'/'` 固定。サブパス配信に戻す場合は `'/<path>/'` に変更すること。
 
 ## ライセンス
 
