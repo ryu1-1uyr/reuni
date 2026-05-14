@@ -40,8 +40,9 @@ function Row({
 
 export function PaletteDisplay({ beforeColors, afterColors, sortMode }: Props) {
 	return (
-		<div className="space-y-5 rounded-lg border border-neutral-200 bg-neutral-50 p-4">
+		<div className="space-y-5">
 			<Row label="Before" colors={beforeColors} sortMode={sortMode} />
+			<div className="h-px bg-rose-100" />
 			<Row label="After" colors={afterColors} sortMode={sortMode} />
 		</div>
 	);

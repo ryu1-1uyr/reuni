@@ -15,7 +15,7 @@ export function ColorSwatch({ hex, isAnchor, onDelete, onToggleAnchor }: Props) 
 	return (
 		<div className="group relative flex flex-col items-stretch w-20">
 			<div
-				className="relative h-20 w-20 rounded-md shadow-sm ring-1 ring-black/5"
+				className="relative h-20 w-20 rounded-xl shadow-sm ring-1 ring-black/5"
 				style={{ backgroundColor: hex }}
 			>
 				{onDelete && (

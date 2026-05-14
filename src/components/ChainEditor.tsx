@@ -1,5 +1,6 @@
 import type { BlendChain, BlendStep, HexColor } from "../core/types";
 import { makeDefaultStep } from "../state/appState";
+import { recommendChain } from "../utils/recommend";
 import { StepEditor, stepLabel } from "./StepEditor";
 
 type Props = {
@@ -9,6 +10,7 @@ type Props = {
 	onRemoveStep: (index: number) => void;
 	onUpdateStep: (index: number, step: BlendStep) => void;
 	onMoveStep: (from: number, to: number) => void;
+	onReplaceChain: (chain: BlendChain) => void;
 };
 
 const STEP_TYPES: BlendStep["type"][] = [
@@ -26,12 +28,25 @@ export function ChainEditor({
 	onRemoveStep,
 	onUpdateStep,
 	onMoveStep,
+	onReplaceChain,
 }: Props) {
 	return (
 		<section className="space-y-3">
-			<h2 className="text-sm font-semibold text-neutral-700">
-				馴染ませチェーン ({chain.length})
-			</h2>
+			<div className="flex flex-wrap items-center justify-between gap-2">
+				<h2 className="text-sm font-semibold text-neutral-700">
+					馴染ませチェーン ({chain.length})
+				</h2>
+				<button
+					type="button"
+					onClick={() => onReplaceChain(recommendChain(inputColors))}
+					disabled={inputColors.length === 0}
+					title="入力色からトーン統一＋ベージュ15%のチェーンを自動生成"
+					className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1 text-sm font-medium text-rose-800 hover:border-rose-300 hover:bg-rose-100 disabled:opacity-40"
+				>
+					<span aria-hidden="true">✨</span>
+					おすすめチェーン
+				</button>
+			</div>
 
 			{chain.length === 0 ? (
 				<p className="text-sm text-neutral-500">

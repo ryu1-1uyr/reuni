@@ -3,6 +3,7 @@ import type { HexColor } from "../core/types";
 export type ExportFormat = "text" | "json" | "css" | "tailwind";
 
 export const EXPORT_FORMAT_LABELS: Record<ExportFormat, string> = {
+	text: "HEX",
 	json: "JSON",
 	css: "CSS変数",
 	tailwind: "Tailwind v4",

@@ -72,7 +72,7 @@ export function PaletteInput({
 				<button
 					type="button"
 					onClick={handleAdd}
-					className="rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-neutral-700 active:bg-neutral-800"
+					className="rounded-lg bg-rose-700 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-rose-600 active:bg-rose-800"
 				>
 					追加
 				</button>
