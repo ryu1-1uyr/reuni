@@ -1,6 +1,7 @@
+import { useRef } from "react";
 import type { BlendChain, BlendStep, HexColor } from "../core/types";
 import { makeDefaultStep } from "../state/appState";
-import { recommendChain } from "../utils/recommend";
+import { RECOMMEND_PRESET_COUNT, recommendChain } from "../utils/recommend";
 import { StepEditor, stepLabel } from "./StepEditor";
 
 type Props = {
@@ -30,6 +31,14 @@ export function ChainEditor({
   onMoveStep,
   onReplaceChain,
 }: Props) {
+  const presetIndexRef = useRef(0);
+
+  const handleRecommend = () => {
+    onReplaceChain(recommendChain(inputColors, presetIndexRef.current));
+    presetIndexRef.current =
+      (presetIndexRef.current + 1) % RECOMMEND_PRESET_COUNT;
+  };
+
   return (
     <section className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -38,9 +47,9 @@ export function ChainEditor({
         </h2>
         <button
           type="button"
-          onClick={() => onReplaceChain(recommendChain(inputColors))}
+          onClick={handleRecommend}
           disabled={inputColors.length === 0}
-          title="入力色からトーン統一＋ベージュ15%のチェーンを自動生成"
+          title="押すたびに別のプリセットを適用するよ"
           className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1 text-sm font-medium text-rose-800 hover:border-rose-300 hover:bg-rose-100 disabled:opacity-40"
         >
           なんかいい感じにするボタン
