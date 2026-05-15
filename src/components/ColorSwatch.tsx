@@ -23,7 +23,7 @@ export function ColorSwatch({ hex, isAnchor, onDelete, onToggleAnchor }: Props) 
 						type="button"
 						onClick={onDelete}
 						aria-label={`Remove ${hex}`}
-						className={`absolute top-1 right-1 h-5 w-5 rounded-full bg-black/30 ${textOnSwatch} text-xs leading-none opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/50`}
+						className={`absolute top-1 right-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-black/30 ${textOnSwatch} text-xs leading-none opacity-0 pointer-coarse:opacity-70 group-hover:opacity-100 transition-opacity hover:bg-black/50`}
 					>
 						×
 					</button>
@@ -35,10 +35,10 @@ export function ColorSwatch({ hex, isAnchor, onDelete, onToggleAnchor }: Props) 
 						aria-label={
 							isAnchor ? `Clear anchor on ${hex}` : `Set ${hex} as anchor`
 						}
-						className={`absolute bottom-1 left-1 h-5 w-5 rounded-full text-xs leading-none transition-opacity ${
+						className={`absolute bottom-1 left-1 inline-flex h-5 w-5 items-center justify-center rounded-full text-xs leading-none transition-opacity ${
 							isAnchor
 								? `${textOnSwatch} opacity-100`
-								: `${textOnSwatch} opacity-0 group-hover:opacity-60 hover:opacity-100`
+								: `${textOnSwatch} opacity-0 pointer-coarse:opacity-50 group-hover:opacity-60 hover:opacity-100`
 						}`}
 					>
 						{isAnchor ? "★" : "☆"}

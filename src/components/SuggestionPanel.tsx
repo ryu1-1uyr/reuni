@@ -19,7 +19,7 @@ export function SuggestionPanel({ inputColors, onAdd }: Props) {
           こんな色も合うかも
         </h2>
         <span className="text-xs text-neutral-500">
-          （パレットに足りない色相から雑に提案）
+          （足りない色相から雑に提案）
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
