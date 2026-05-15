@@ -175,8 +175,9 @@ function App() {
           />
         </SectionCard>
 
-        <footer className="pt-2 text-center text-xs text-rose-700/40">
-          reuni — palette blender
+        <footer className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-2 text-center text-xs text-rose-700/40">
+          <span>reuni — palette blender</span>
+          <span>© 2026 created by ryu</span>
         </footer>
       </div>
     </div>
