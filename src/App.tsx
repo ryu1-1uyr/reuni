@@ -6,6 +6,7 @@ import { PaletteInput } from "./components/PaletteInput";
 import { PersistencePanel } from "./components/PersistencePanel";
 import { SectionCard } from "./components/SectionCard";
 import { SortToggle } from "./components/SortToggle";
+import { StickyAfterBar } from "./components/StickyAfterBar";
 import { SuggestionPanel } from "./components/SuggestionPanel";
 import { applyChain } from "./core/index";
 import type { Palette } from "./core/types";
@@ -17,8 +18,18 @@ import {
   removeFromHistory,
   saveCurrent,
 } from "./storage/localStorage";
+import { buildShareUrl, readSharedStateFromHash } from "./utils/shareUrl";
 
 function initState(): AppState {
+  const shared = readSharedStateFromHash(window.location.hash);
+  if (shared) {
+    return {
+      inputColors: shared.inputColors,
+      anchorIndex: shared.anchorIndex,
+      chain: shared.chain,
+      sortMode: "input",
+    };
+  }
   return loadCurrent() ?? INITIAL_STATE;
 }
 
@@ -63,6 +74,15 @@ function App() {
 
   const handleDeleteSnapshot = (id: string) => {
     setHistory((h) => removeFromHistory(h, id));
+  };
+
+  const handleCopyShareUrl = async () => {
+    const url = buildShareUrl({
+      inputColors: state.inputColors,
+      anchorIndex: state.anchorIndex,
+      chain: state.chain,
+    });
+    await navigator.clipboard.writeText(url);
   };
 
   return (
@@ -124,6 +144,8 @@ function App() {
           </section>
         </SectionCard>
 
+        <StickyAfterBar afterColors={outputPalette.colors} />
+
         <SectionCard>
           <ChainEditor
             chain={state.chain}
@@ -149,6 +171,7 @@ function App() {
             onSaveSnapshot={handleSaveSnapshot}
             onRestore={handleRestore}
             onDeleteSnapshot={handleDeleteSnapshot}
+            onCopyShareUrl={handleCopyShareUrl}
           />
         </SectionCard>
 
