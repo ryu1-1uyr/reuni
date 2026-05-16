@@ -177,7 +177,18 @@ function App() {
 
         <footer className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-2 text-center text-xs text-rose-700/40">
           <span>reuni — palette blender</span>
-          <span>© 2026 created by ryu</span>
+          <span>
+            © 2026 created by{" "}
+            <a
+              href="https://x.com/reu_00_00"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              ryu
+            </a>{" "}
+            ← 不具合はこちらまで
+          </span>
         </footer>
       </div>
     </div>
